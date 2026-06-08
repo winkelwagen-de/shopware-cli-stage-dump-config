@@ -1,0 +1,3 @@
+plugin:
+  name: swag/markets
+  label: 'Multichannel markets integration for Shopware 6'

@@ -1,0 +1,14 @@
+plugin:
+  name: swag/newsletter
+  label: 'Swag Newsletter'
+  maintainer: '@shopware'
+dump:
+  tables:
+    swag_newsletter_recipient_custom:
+      rewrite:
+        email: email
+        first_name: first_name
+        last_name: last_name
+        phone_number: phone_number
+    swag_newsletter_send_log:
+      nodata: true

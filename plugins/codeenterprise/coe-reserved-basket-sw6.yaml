@@ -1,0 +1,8 @@
+plugin:
+  name: codeenterprise/coe-reserved-basket-sw6
+  label: 'Reservierung für Abverkaufs-Artikel mit Countdown'
+dump:
+  tables:
+    coe_reserved_basket:
+      rewrite:
+        cart_token: "'***'"

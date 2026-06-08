@@ -1,0 +1,10 @@
+plugin:
+  name: dreisc/dreisc-seo-pro
+  label: 'SEO Professional'
+dump:
+  tables:
+    dreisc_seo_redirect_import_export_file:
+      rewrite:
+        access_token: "'***'"
+    dreisc_seo_redirect_import_export_log:
+      nodata: true

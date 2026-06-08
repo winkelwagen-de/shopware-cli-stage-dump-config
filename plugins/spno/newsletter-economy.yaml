@@ -1,0 +1,16 @@
+plugin:
+  name: spno/newsletter-economy
+  label: 'Newsletter economy version'
+dump:
+  tables:
+    newsletter_sender:
+      rewrite:
+        email: email
+        password: "'***'"
+    newsletter_sender_translation:
+      rewrite:
+        email: email
+        password: "'***'"
+    newsletter_translation:
+      rewrite:
+        short_description: "'redacted'"

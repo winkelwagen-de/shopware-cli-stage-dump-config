@@ -1,0 +1,15 @@
+plugin:
+  name: swag/paypal
+  label: 'PayPal integration for Shopware 6'
+dump:
+  tables:
+    swag_paypal_pos_sales_channel:
+      rewrite:
+        api_key: "'***'"
+    swag_paypal_pos_sales_channel_run:
+      rewrite:
+        message_count: "'redacted'"
+    swag_paypal_pos_sales_channel_run_log:
+      nodata: true
+      rewrite:
+        message: "'redacted'"

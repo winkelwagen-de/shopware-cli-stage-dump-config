@@ -1,0 +1,8 @@
+plugin:
+  name: cbax/modul-analytics
+  label: 'Umfangreiche Shop Statistik über viele Vorkommnisse im Shop.'
+dump:
+  tables:
+    cbax_analytics_pool:
+      rewrite:
+        remote_address: remote_address

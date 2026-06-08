@@ -1,0 +1,8 @@
+plugin:
+  name: hochwarth/sold-out
+  label: 'Sold Out Manager'
+dump:
+  tables:
+    hochwarth_sold_out_mail:
+      rewrite:
+        email: email

@@ -1,0 +1,8 @@
+plugin:
+  name: fgits/tickets
+  label: 'Für alle, die über Ihren Shop Tickets oder Karten für Events, Veranstaltungen, Festivals oder Tagungen verkaufen möchten, empfiehlt sich das Plugin Tickets for Shopware. Mit diesem Plugin können Sie Produkte ganz einfach als “Digitales Ticket” markieren und dem Kunden den Download eines PDF-Tickets nach der Bestellung ermöglichen.'
+dump:
+  tables:
+    fgits_tickets_ticket:
+      rewrite:
+        personalized_email: email

@@ -1,0 +1,16 @@
+plugin:
+  name: acris/staging
+  label: 'ACRIS Staging'
+dump:
+  tables:
+    acris_staging:
+      ignore: true
+      rewrite:
+        admin_mail: email
+        db_password: "'***'"
+    acris_staging_log:
+      nodata: true
+    acris_staging_log_translation:
+      nodata: true
+      rewrite:
+        message: "'redacted'"
