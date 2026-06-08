@@ -1,0 +1,4 @@
+{
+    "name": "acme/foo-plugin",
+    "description": "Fixture plugin for migration scanner tests"
+}

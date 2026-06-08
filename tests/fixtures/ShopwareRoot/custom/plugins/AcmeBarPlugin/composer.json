@@ -1,0 +1,4 @@
+{
+    "name": "acme/bar-plugin",
+    "description": "Second fixture plugin for bulk scanner tests"
+}

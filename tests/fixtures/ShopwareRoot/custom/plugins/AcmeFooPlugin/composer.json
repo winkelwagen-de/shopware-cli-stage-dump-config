@@ -1,0 +1,4 @@
+{
+    "name": "acme/foo-plugin",
+    "description": "Fixture plugin in Shopware root for bulk scanner tests"
+}
