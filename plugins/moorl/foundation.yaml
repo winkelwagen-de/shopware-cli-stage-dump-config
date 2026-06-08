@@ -1,0 +1,7 @@
+plugin:
+  name: moorl/foundation
+  label: 'Moorl Foundation'
+dump:
+  tables:
+    moorl_location_cache:
+      nodata: true

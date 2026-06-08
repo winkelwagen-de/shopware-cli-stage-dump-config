@@ -3,8 +3,8 @@
 # Remove columns marked skip/review, resolve TODO comments, then run bin/cleanup-plugin-config.
 
 plugin:
-  name: "webmatch/tag-manager-analytics"
-  label: "Google Tag Manager + Enhanced E-Commerce Tracking"
+  name: "swkweb/hide-soldout-products"
+  label: "If products are sold out, they are automatically hidden."
 
 dump:
   tables:
