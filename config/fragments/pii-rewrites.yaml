@@ -1,0 +1,18 @@
+# Reusable PII shorthand bundles for plugin config authoring.
+# Reference these anchors in plugins/*.yaml — see docs/contributing-a-plugin.md
+
+anchors:
+  person_pii: &person_pii
+    first_name: first_name
+    last_name: last_name
+    email: email
+
+  address_pii: &address_pii
+    street: street
+    zipcode: zipcode
+    city: city
+    phone_number: phone_number
+
+  full_contact_pii: &full_contact_pii
+    <<: *person_pii
+    <<: *address_pii

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "shopware-cli dump output config",
+  "type": "object",
+  "required": ["dump"],
+  "additionalProperties": false,
+  "properties": {
+    "dump": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rewrite": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        },
+        "nodata": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "ignore": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "where": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  }
+}

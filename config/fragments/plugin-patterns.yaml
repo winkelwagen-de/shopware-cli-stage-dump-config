@@ -1,0 +1,13 @@
+# Common plugin table naming patterns (documentation reference).
+# The scanner applies similar heuristics automatically.
+
+nodata_suffixes:
+  - _log
+  - _queue
+  - _index
+  - _tmp
+  - _history
+
+ignore_suffixes:
+  - _cache
+  - _staging
