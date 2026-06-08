@@ -20,6 +20,12 @@ final class SchemaState
 
     public function applyStatement(string $sql): void
     {
+        if (preg_match('/`(#(?:[^`#]|#)+#)`/', $sql, $match)) {
+            $this->warnings[] = sprintf('Unresolved SQL placeholder in statement: %s', $match[1]);
+
+            return;
+        }
+
         if (preg_match('/DROP\s+TABLE\s+(?:IF\s+EXISTS\s+)?`([^`]+)`/i', $sql, $match)) {
             $table = strtolower($match[1]);
             unset($this->tables[$table], $this->createdTables[$table], $this->alteredColumns[$table]);
@@ -36,19 +42,24 @@ final class SchemaState
             return;
         }
 
-        if (preg_match('/ALTER\s+TABLE\s+`([^`]+)`\s+ADD\s+(?:COLUMN\s+)?`([^`]+)`/i', $sql, $match)) {
-            $table = strtolower($match[1]);
-            $column = strtolower($match[2]);
-            $this->tables[$table] ??= [];
-            if (!\in_array($column, $this->tables[$table], true)) {
-                $this->tables[$table][] = $column;
-            }
-            $this->alteredColumns[$table][$column] = true;
+        if (preg_match('/ALTER\s+TABLE\s+`([^`]+)`/i', $sql, $tableMatch)) {
+            $table = strtolower($tableMatch[1]);
 
-            return;
+            if (preg_match_all('/ADD\s+(?:COLUMN\s+)?`([^`]+)`/i', $sql, $addMatches)) {
+                foreach ($addMatches[1] as $column) {
+                    $column = strtolower($column);
+                    $this->tables[$table] ??= [];
+                    if (!\in_array($column, $this->tables[$table], true)) {
+                        $this->tables[$table][] = $column;
+                    }
+                    $this->alteredColumns[$table][$column] = true;
+                }
+
+                return;
+            }
         }
 
-        if (preg_match('/ALTER\s+TABLE\s+`([^`]+)`\s+DROP\s+COLUMN\s+`([^`]+)`/i', $sql, $match)) {
+        if (preg_match('/ALTER\s+TABLE\s+`([^`]+)`\s+DROP\s+(?:COLUMN\s+)?`([^`]+)`/i', $sql, $match)) {
             $table = strtolower($match[1]);
             $column = strtolower($match[2]);
             if (isset($this->tables[$table])) {

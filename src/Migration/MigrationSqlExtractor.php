@@ -6,6 +6,11 @@ namespace ShopwareGdprDump\Migration;
 
 final class MigrationSqlExtractor
 {
+    public function __construct(
+        private readonly MigrationPlaceholderResolver $placeholderResolver = new MigrationPlaceholderResolver(),
+    ) {
+    }
+
     /**
      * @return list<string>
      */
@@ -16,25 +21,30 @@ final class MigrationSqlExtractor
             throw new \RuntimeException(sprintf('Unable to read migration file: %s', $filePath));
         }
 
-        return $this->extractFromSource($contents);
+        $pluginPath = dirname($filePath, 3);
+        $replacements = $this->placeholderResolver->resolveFromSource($contents, $pluginPath);
+
+        return $this->extractFromSource($contents, $replacements);
     }
 
     /**
+     * @param array<string, string> $replacements
+     *
      * @return list<string>
      */
-    public function extractFromSource(string $source): array
+    public function extractFromSource(string $source, array $replacements = []): array
     {
         $statements = [];
 
         if (preg_match_all('/<<<[\'"]?SQL[\'"]?\s*\R(.*?)\R\s*SQL;/si', $source, $matches)) {
             foreach ($matches[1] as $sqlBlock) {
-                $statements = [...$statements, ...$this->splitStatements($sqlBlock)];
+                $statements = [...$statements, ...$this->splitStatements($this->placeholderResolver->apply($sqlBlock, $replacements))];
             }
         }
 
         if (preg_match_all('/executeStatement\s*\(\s*([\'"])(.*?)\1/s', $source, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $match) {
-                $statements = [...$statements, ...$this->splitStatements($match[2])];
+                $statements = [...$statements, ...$this->splitStatements($this->placeholderResolver->apply($match[2], $replacements))];
             }
         }
 
