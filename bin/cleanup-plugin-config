@@ -1,0 +1,73 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use ShopwareGdprDump\Cleanup\PluginConfigCleaner;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$projectRoot = dirname(__DIR__);
+$dryRun = \in_array('--dry-run', $argv, true);
+$files = array_values(array_filter(
+    array_slice($argv, 1),
+    static fn (string $arg): bool => !str_starts_with($arg, '--')
+));
+
+function printUsage(): void
+{
+    fwrite(STDERR, <<<USAGE
+Usage:
+  bin/cleanup-plugin-config [plugin.yaml ...] [--dry-run]
+
+Removes comments, skip/review draft markers, and empty sections from reviewed
+plugin configs. By default cleans all YAML files under plugins/ except plugins/_*/.
+
+Run after reviewing scanner output and before validate/build:
+
+  bin/cleanup-plugin-config plugins/vendor/plugin.yaml
+  bin/build-dump-config
+  bin/validate-dump-config
+
+USAGE);
+}
+
+if (\in_array('--help', $argv, true) || \in_array('-h', $argv, true)) {
+    printUsage();
+    exit(0);
+}
+
+$cleaner = new PluginConfigCleaner();
+$targets = $cleaner->resolvePluginFiles($projectRoot, $files);
+
+if ($targets === []) {
+    fwrite(STDERR, "No plugin config files to clean.\n");
+    exit(1);
+}
+
+$errors = [];
+$cleaned = 0;
+
+foreach ($targets as $file) {
+    $fileErrors = $cleaner->cleanFile($file, $dryRun);
+    if ($fileErrors !== []) {
+        $errors = [...$errors, ...$fileErrors];
+        continue;
+    }
+
+    fwrite(STDOUT, ($dryRun ? 'Would clean ' : 'Cleaned ') . $file . "\n");
+    ++$cleaned;
+}
+
+if ($errors !== []) {
+    fwrite(STDERR, "Cleanup failed:\n");
+    foreach ($errors as $error) {
+        fwrite(STDERR, " - {$error}\n");
+    }
+    exit(1);
+}
+
+if ($cleaned === 0) {
+    fwrite(STDERR, "No files cleaned.\n");
+    exit(1);
+}
