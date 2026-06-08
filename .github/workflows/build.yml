@@ -4,13 +4,7 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'plugins/**'
-      - 'config/**'
-      - 'schema/**'
-      - 'bin/**'
-      - 'src/**'
-      - 'composer.json'
+  workflow_dispatch:
 
 permissions:
   contents: write
