@@ -1,0 +1,59 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$projectRoot = dirname(__DIR__);
+$distPath = 'dist/shopware-gdpr-dump.yml';
+
+$changed = getChangedFiles($distPath);
+
+if ($changed === []) {
+    fwrite(STDOUT, "dist/shopware-gdpr-dump.yml was not changed in this branch.\n");
+    exit(0);
+}
+
+fwrite(STDERR, "Do not commit dist/shopware-gdpr-dump.yml — CI updates it on merge to main.\n");
+fwrite(STDERR, "Revert changes to:\n");
+foreach ($changed as $file) {
+    fwrite(STDERR, " - {$file}\n");
+}
+exit(1);
+
+/**
+ * @return list<string>
+ */
+function getChangedFiles(string $distPath): array
+{
+    $matches = [];
+    $base = getenv('GITHUB_BASE_REF');
+    $commands = [];
+
+    if (\is_string($base) && $base !== '') {
+        $base = preg_replace('/[^a-zA-Z0-9._\/-]/', '', $base) ?? '';
+        if ($base !== '') {
+            $commands[] = 'git diff --name-only origin/' . $base . '...HEAD';
+            $commands[] = 'git diff --name-only --cached origin/' . $base . '...HEAD';
+        }
+    }
+
+    $commands[] = 'git diff --name-only HEAD';
+    $commands[] = 'git diff --cached --name-only';
+
+    foreach ($commands as $command) {
+        $output = shell_exec($command);
+        if (!\is_string($output)) {
+            continue;
+        }
+
+        foreach (preg_split('/\R/', trim($output)) ?: [] as $line) {
+            if ($line === $distPath) {
+                $matches[$line] = true;
+            }
+        }
+    }
+
+    return array_keys($matches);
+}

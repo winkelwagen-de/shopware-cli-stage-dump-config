@@ -1,5 +1,5 @@
 {
-    "name": "friendsofshopware/shopware-gdpr-dump",
+    "name": "winkelwagen/shopware-gdpr-dump",
     "description": "Community GDPR dump config for shopware-cli (plugin tables only)",
     "type": "library",
     "license": "MIT",
@@ -14,14 +14,19 @@
     },
     "bin": [
         "bin/build-dump-config",
+        "bin/check-dist-not-changed",
         "bin/scan-plugin-migrations",
         "bin/cleanup-plugin-config",
         "bin/validate-dump-config"
     ],
     "extra": {
         "shopware-gdpr-dump": {
-            "config-file": "shopware-gdpr-dump.yml"
+            "config-file": "dist/shopware-gdpr-dump.yml"
         }
+    },
+    "homepage": "https://github.com/winkelwagen-de/shopware-cli-stage-dump-config",
+    "support": {
+        "source": "https://github.com/winkelwagen-de/shopware-cli-stage-dump-config"
     },
     "archive": {
         "exclude": [
@@ -31,8 +36,7 @@
             "config",
             "schema",
             "bin",
-            "src",
-            "dist"
+            "src"
         ]
     }
 }

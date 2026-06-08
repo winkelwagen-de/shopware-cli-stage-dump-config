@@ -17,8 +17,8 @@ Do **not** re-declare standard Shopware columns. If your plugin runs `ALTER TABL
 Clone this repository and point the scanner at your Shopware installation:
 
 ```bash
-git clone git@github.com:friendsofshopware/shopware-gdpr-dump.git
-cd shopware-gdpr-dump && composer install
+git clone https://github.com/winkelwagen-de/shopware-cli-stage-dump-config.git
+cd shopware-cli-stage-dump-config && composer install
 bin/scan-plugin-migrations /path/to/shopware
 ```
 
@@ -106,11 +106,12 @@ See [`config/fragments/plugin-patterns.yaml`](../config/fragments/plugin-pattern
 ## Step 4 — Validate and open a PR
 
 ```bash
-bin/build-dump-config
 bin/validate-dump-config
 ```
 
-CI validates YAML syntax, schema, unique plugin names, merge conflicts, dist freshness, and rejects scanner draft headers or `# TODO` comments in plugin configs.
+Do **not** commit `dist/shopware-gdpr-dump.yml`. CI rebuilds it on merge to `main`. PRs that modify that file are blocked.
+
+CI validates YAML syntax, schema, unique plugin names, merge conflicts, verifies the merged config builds, rejects manual dist changes, and rejects scanner draft headers or `# TODO` comments in plugin configs.
 
 ## File naming
 

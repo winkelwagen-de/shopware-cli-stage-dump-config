@@ -31,12 +31,12 @@ jobs:
 
       - name: Commit updated dist if changed
         run: |
-          if git diff --quiet dist/shopware-gdpr-dump.yml shopware-gdpr-dump.yml; then
+          if git diff --quiet dist/shopware-gdpr-dump.yml; then
             echo "No changes to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dist/shopware-gdpr-dump.yml shopware-gdpr-dump.yml
-          git commit -m "[ci] rebuild dump config"
+          git add dist/shopware-gdpr-dump.yml
+          git -c commit.gpgsign=false commit -m "[ci] rebuild dump config"
           git push

@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 use ShopwareGdprDump\Build\DumpConfigBuilder;
+use Symfony\Component\Yaml\Yaml;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -20,12 +21,16 @@ try {
     }
 
     $distFile = $distDir . '/shopware-gdpr-dump.yml';
-    $packageFile = $projectRoot . '/shopware-gdpr-dump.yml';
 
     if ($checkOnly) {
-        $current = is_file($distFile) ? (string) file_get_contents($distFile) : '';
-        if ($current !== $built) {
-            fwrite(STDERR, "dist/shopware-gdpr-dump.yml is out of date — run bin/build-dump-config\n");
+        if (!is_file($distFile)) {
+            fwrite(STDERR, "dist/shopware-gdpr-dump.yml is missing — run bin/build-dump-config and commit the result\n");
+            exit(1);
+        }
+
+        $current = (string) file_get_contents($distFile);
+        if (normalizeDumpYaml($current) !== normalizeDumpYaml($built)) {
+            fwrite(STDERR, "dist/shopware-gdpr-dump.yml is out of date — run bin/build-dump-config and commit the result\n");
             exit(1);
         }
         fwrite(STDOUT, "dist/shopware-gdpr-dump.yml is up to date.\n");
@@ -33,10 +38,16 @@ try {
     }
 
     file_put_contents($distFile, $built);
-    file_put_contents($packageFile, $built);
 
-    fwrite(STDOUT, "Wrote dist/shopware-gdpr-dump.yml and shopware-gdpr-dump.yml\n");
+    fwrite(STDOUT, "Wrote dist/shopware-gdpr-dump.yml\n");
 } catch (Throwable $e) {
     fwrite(STDERR, $e->getMessage() . "\n");
     exit(1);
+}
+
+function normalizeDumpYaml(string $yaml): string
+{
+    $parsed = Yaml::parse($yaml);
+
+    return Yaml::dump($parsed, 6, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
 }

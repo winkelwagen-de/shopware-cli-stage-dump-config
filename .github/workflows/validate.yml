@@ -9,6 +9,7 @@ on:
       - 'bin/**'
       - 'src/**'
       - 'composer.json'
+      - 'dist/**'
 
 jobs:
   validate:
@@ -23,8 +24,11 @@ jobs:
           php_version: '8.2'
           args: --no-interaction --prefer-dist
 
+      - name: Reject manual dist changes
+        run: php bin/check-dist-not-changed
+
       - name: Validate changed plugin configs
         run: php bin/validate-dump-config --changed-only --skip-dist-check
 
-      - name: Check dist freshness
-        run: php bin/build-dump-config --check
+      - name: Verify merged dump config builds
+        run: php bin/build-dump-config

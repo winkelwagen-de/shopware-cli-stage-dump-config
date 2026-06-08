@@ -39,7 +39,7 @@ final class DumpConfigValidator
         $errors = [...$errors, ...$this->validateAgainstSchema($pluginFiles)];
 
         if ($checkDist) {
-            $errors = [...$errors, ...$this->validateDistFreshness()];
+            $errors = [...$errors, ...$this->validateDistBuildable()];
         }
 
         return $errors;
@@ -212,19 +212,12 @@ final class DumpConfigValidator
     /**
      * @return list<string>
      */
-    private function validateDistFreshness(): array
+    private function validateDistBuildable(): array
     {
-        $builder = new DumpConfigBuilder($this->projectRoot);
-        $built = $builder->build();
-
-        $distFile = $this->projectRoot . '/dist/shopware-gdpr-dump.yml';
-        if (!is_file($distFile)) {
-            return ['dist/shopware-gdpr-dump.yml is missing — run bin/build-dump-config'];
-        }
-
-        $current = (string) file_get_contents($distFile);
-        if ($this->normalizeYaml($current) !== $this->normalizeYaml($built)) {
-            return ['dist/shopware-gdpr-dump.yml is out of date — run bin/build-dump-config'];
+        try {
+            (new DumpConfigBuilder($this->projectRoot))->build();
+        } catch (\Throwable $e) {
+            return ['Unable to build dist/shopware-gdpr-dump.yml: ' . $e->getMessage()];
         }
 
         return [];
@@ -283,13 +276,6 @@ final class DumpConfigValidator
         }
 
         return $configs;
-    }
-
-    private function normalizeYaml(string $yaml): string
-    {
-        $parsed = Yaml::parse($yaml);
-
-        return Yaml::dump($parsed, 6, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
     }
 
     /**
