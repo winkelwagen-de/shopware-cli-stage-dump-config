@@ -22,7 +22,6 @@ final class DumpConfigBuilder
         $output = ['dump' => array_filter([
             'rewrite' => $merged['rewrite'] !== [] ? $merged['rewrite'] : null,
             'nodata' => $merged['nodata'] !== [] ? $merged['nodata'] : null,
-            'ignore' => $merged['ignore'] !== [] ? $merged['ignore'] : null,
         ])];
 
         return Yaml::dump($output, 6, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);

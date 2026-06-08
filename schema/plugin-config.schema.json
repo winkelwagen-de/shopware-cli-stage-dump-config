@@ -30,8 +30,7 @@
                 "type": "object",
                 "additionalProperties": { "type": "string" }
               },
-              "nodata": { "type": "boolean" },
-              "ignore": { "type": "boolean" }
+              "nodata": { "type": "boolean" }
             }
           }
         }

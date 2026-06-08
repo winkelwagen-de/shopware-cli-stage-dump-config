@@ -55,12 +55,8 @@ final class PluginConfigCleaner
 
             $cleanedTable = [];
 
-            if (($tableConfig['nodata'] ?? false) === true) {
+            if (($tableConfig['nodata'] ?? false) === true || ($tableConfig['ignore'] ?? false) === true) {
                 $cleanedTable['nodata'] = true;
-            }
-
-            if (($tableConfig['ignore'] ?? false) === true) {
-                $cleanedTable['ignore'] = true;
             }
 
             $rewrite = $tableConfig['rewrite'] ?? [];

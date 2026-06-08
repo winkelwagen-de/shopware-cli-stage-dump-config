@@ -55,17 +55,11 @@ final class PluginConfigDraftWriter
                     $lines[] = '      nodata: true';
                 }
 
-                if (isset($config['ignore']) && $config['ignore'] === true) {
-                    $lines[] = '      ignore: true';
-                }
-
                 $rewrites = $config['rewrite'] ?? [];
                 if ($rewrites === []) {
                     continue;
                 }
 
-                $lines[] = '';
-                $lines[] = '';
                 $lines[] = '      rewrite:';
 
                 foreach ($this->orderRewriteColumns($rewrites) as $entry) {

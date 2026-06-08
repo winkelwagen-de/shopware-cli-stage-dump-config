@@ -74,6 +74,10 @@ final class ColumnHeuristics
             return ['shorthand' => 'city', 'uncertain' => false];
         }
 
+        if (preg_match('/address_line\d*$/', $column) === 1) {
+            return ['shorthand' => 'address', 'uncertain' => false];
+        }
+
         if ($column === 'company' || str_ends_with($column, '_company')) {
             return ['shorthand' => 'company', 'uncertain' => true];
         }

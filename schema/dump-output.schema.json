@@ -20,10 +20,6 @@
           "type": "array",
           "items": { "type": "string" }
         },
-        "ignore": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
         "where": {
           "type": "object",
           "additionalProperties": { "type": "string" }

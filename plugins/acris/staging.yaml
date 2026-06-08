@@ -4,7 +4,7 @@ plugin:
 dump:
   tables:
     acris_staging:
-      ignore: true
+      nodata: true
       rewrite:
         admin_mail: email
         db_password: "'***'"

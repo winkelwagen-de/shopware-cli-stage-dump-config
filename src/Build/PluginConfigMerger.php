@@ -16,7 +16,7 @@ final class PluginConfigMerger
     /**
      * @param list<array<string, mixed>> $pluginConfigs keyed by composer name
      *
-     * @return array{rewrite: array<string, array<string, string>>, nodata: list<string>, ignore: list<string>}
+     * @return array{rewrite: array<string, array<string, string>>, nodata: list<string>}
      */
     public function merge(array $pluginConfigs): array
     {
@@ -24,7 +24,6 @@ final class PluginConfigMerger
 
         $mergedRewrite = [];
         $nodata = [];
-        $ignore = [];
         $conflicts = [];
 
         foreach ($pluginConfigs as $composerName => $config) {
@@ -32,10 +31,6 @@ final class PluginConfigMerger
 
             foreach ($expanded['nodata'] as $table) {
                 $nodata[$table] = true;
-            }
-
-            foreach ($expanded['ignore'] as $table) {
-                $ignore[$table] = true;
             }
 
             foreach ($expanded['rewrite'] as $table => $columns) {
@@ -67,13 +62,9 @@ final class PluginConfigMerger
         $nodataList = array_keys($nodata);
         sort($nodataList);
 
-        $ignoreList = array_keys($ignore);
-        sort($ignoreList);
-
         return [
             'rewrite' => $mergedRewrite,
             'nodata' => $nodataList,
-            'ignore' => $ignoreList,
         ];
     }
 }

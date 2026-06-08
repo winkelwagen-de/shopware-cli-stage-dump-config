@@ -7,7 +7,5 @@ nodata_suffixes:
   - _index
   - _tmp
   - _history
-
-ignore_suffixes:
   - _cache
   - _staging

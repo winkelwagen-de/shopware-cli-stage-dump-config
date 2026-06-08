@@ -32,7 +32,7 @@ Metadata is detected automatically:
 | `plugin.label` | `composer.json` → `"description"` |
 | output path | `plugins/{vendor}/{package}.yaml` |
 
-The scanner lists **every table and every column** from migrations. Heuristics pre-fill suggestions (`admin_mail` → `email`, etc.); everything else is marked `review` or commented as `skip` (structural columns). Tables matching nodata/ignore heuristics are flagged for removal.
+The scanner lists **every table and every column** from migrations. Heuristics pre-fill suggestions (`admin_mail` → `email`, etc.); everything else is marked `review` or commented as `skip` (structural columns). Tables matching nodata heuristics are flagged for removal.
 
 ```bash
 bin/scan-plugin-migrations /path/to/shopware
@@ -55,8 +55,7 @@ Authoring configs use shorthand that `bin/build-dump-config` expands to shopware
 | `street` | `faker.Address.StreetAddress()` |
 | `zipcode` | `faker.Address.PostCode()` |
 | `city` | `faker.Address.City()` |
-| `nodata: true` | export schema only |
-| `ignore: true` | skip table entirely |
+| `nodata: true` | export schema only, omit row data |
 
 Reuse shorthand bundles from [`config/fragments/pii-rewrites.yaml`](../config/fragments/pii-rewrites.yaml) — copy the column keys you need:
 
@@ -95,15 +94,12 @@ dump:
       nodata: true
 
     acme_foo_search_index:
-      ignore: true
+      nodata: true
 ```
 
-## `nodata` vs `ignore`
+## `nodata`
 
-| Use | When |
-|-----|------|
-| `nodata: true` | Logs, queues, import history — schema may be useful, data is not |
-| `ignore: true` | Pure cache/staging tables — not needed in dumps at all |
+Use `nodata: true` for logs, queues, caches, staging tables, and other plugin tables where the schema may be useful but row data should not appear in dumps.
 
 See [`config/fragments/plugin-patterns.yaml`](../config/fragments/plugin-patterns.yaml) for common naming patterns.
 

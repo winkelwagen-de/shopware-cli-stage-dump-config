@@ -92,15 +92,9 @@ final class PluginMigrationScanner
 
         $tableSuggestion = $this->tableHeuristics->suggest($table);
         if ($tableSuggestion !== null) {
-            if (isset($tableSuggestion['ignore'])) {
-                $config['ignore'] = true;
-                $config['_comment'] = 'table name matches ignore heuristic';
-                $config['_remove_table'] = true;
-            } else {
-                $config['nodata'] = true;
-                $config['_comment'] = 'table name matches nodata heuristic';
-                $config['_remove_table'] = true;
-            }
+            $config['nodata'] = true;
+            $config['_comment'] = 'table name matches nodata heuristic';
+            $config['_remove_table'] = true;
         }
 
         return $config;
