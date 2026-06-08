@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Plugin GDPR dump config (authoring format)",
   "type": "object",
-  "required": ["plugin", "dump"],
+  "required": ["plugin"],
   "additionalProperties": false,
   "properties": {
     "plugin": {

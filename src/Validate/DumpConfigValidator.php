@@ -75,17 +75,27 @@ final class DumpConfigValidator
             $errors[] = sprintf('%s: plugin.name is required', $file);
         }
 
-        $dump = $parsed['dump']['tables'] ?? null;
+        $dump = $parsed['dump'] ?? null;
         if ($dump !== null && !\is_array($dump)) {
+            $errors[] = sprintf('%s: dump must be a mapping', $file);
+            return $errors;
+        }
+
+        if ($dump === null) {
+            return $errors;
+        }
+
+        $tables = $dump['tables'] ?? null;
+        if ($tables !== null && !\is_array($tables)) {
             $errors[] = sprintf('%s: dump.tables must be a mapping', $file);
             return $errors;
         }
 
-        if (!\is_array($dump)) {
+        if (!\is_array($tables)) {
             return $errors;
         }
 
-        foreach ($dump as $table => $tableConfig) {
+        foreach ($tables as $table => $tableConfig) {
             if (!\is_array($tableConfig)) {
                 $errors[] = sprintf('%s: dump.tables.%s must be a mapping', $file, $table);
                 continue;
@@ -248,9 +258,15 @@ final class DumpConfigValidator
             }
 
             $path = $file->getPathname();
-            if (preg_match('/\.ya?ml$/', $path) === 1) {
-                $all[] = $path;
+            if (preg_match('/\.ya?ml$/', $path) !== 1) {
+                continue;
             }
+
+            if (str_contains($path, '/plugins/_')) {
+                continue;
+            }
+
+            $all[] = $path;
         }
 
         sort($all);

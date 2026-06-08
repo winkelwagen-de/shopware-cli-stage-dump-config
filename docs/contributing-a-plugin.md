@@ -121,3 +121,5 @@ One file per plugin, named after the Composer package:
 plugins/acme/foo-plugin.yaml   # for composer name acme/foo-plugin
 plugins/swag/newsletter.yaml   # for composer name swag/newsletter
 ```
+
+A file with only `plugin:` metadata and no `dump` section means the plugin was scanned and needs no GDPR dump rules.
