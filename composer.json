@@ -1,0 +1,38 @@
+{
+    "name": "friendsofshopware/shopware-gdpr-dump",
+    "description": "Community GDPR dump config for shopware-cli (plugin tables only)",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2",
+        "symfony/yaml": "^7.0|^6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "ShopwareGdprDump\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/build-dump-config",
+        "bin/scan-plugin-migrations",
+        "bin/cleanup-plugin-config",
+        "bin/validate-dump-config"
+    ],
+    "extra": {
+        "shopware-gdpr-dump": {
+            "config-file": "shopware-gdpr-dump.yml"
+        }
+    },
+    "archive": {
+        "exclude": [
+            "tests",
+            ".github",
+            "plugins",
+            "config",
+            "schema",
+            "bin",
+            "src",
+            "dist"
+        ]
+    }
+}
