@@ -1,0 +1,116 @@
+dump:
+  rewrite:
+    acris_cookie_group_translation:
+      description: "'redacted'"
+    acris_cookie_translation:
+      description: "'redacted'"
+    acris_staging:
+      admin_mail: '{{- faker.Internet.Email() -}}'
+      db_password: "'***'"
+    acris_staging_log_translation:
+      message: "'redacted'"
+    advanced_search_config_field:
+      tokenize: "'***'"
+    b2b_components_approval_rule:
+      description: "'redacted'"
+    b2b_components_pending_order:
+      cart_payload: "'redacted'"
+    b2b_components_pending_order_address:
+      additional_address_line1: '{{- faker.Address.StreetAddress() -}}'
+      additional_address_line2: '{{- faker.Address.StreetAddress() -}}'
+      city: '{{- faker.Address.City() -}}'
+      company: '{{- faker.Person.Name() -}}'
+      first_name: '{{- faker.Person.FirstName() -}}'
+      last_name: '{{- faker.Person.LastName() -}}'
+      phone_number: '{{- faker.Phone.Number() -}}'
+      street: '{{- faker.Address.StreetAddress() -}}'
+      zipcode: '{{- faker.Address.PostCode() -}}'
+    b2b_order_employee:
+      first_name: '{{- faker.Person.FirstName() -}}'
+      last_name: '{{- faker.Person.LastName() -}}'
+    cbax_analytics_pool:
+      remote_address: '{{- faker.Internet.Ipv4() -}}'
+    coe_reserved_basket:
+      cart_token: "'***'"
+    dreisc_seo_redirect_import_export_file:
+      access_token: "'***'"
+    esmx_ktconnector_blacklist:
+      email: '{{- faker.Internet.Email() -}}'
+    fgits_tickets_ticket:
+      personalized_email: '{{- faker.Internet.Email() -}}'
+    hochwarth_sold_out_mail:
+      email: '{{- faker.Internet.Email() -}}'
+    newsletter_sender:
+      email: '{{- faker.Internet.Email() -}}'
+      password: "'***'"
+    newsletter_sender_translation:
+      email: '{{- faker.Internet.Email() -}}'
+      password: "'***'"
+    order_return:
+      internal_comment: "'redacted'"
+    order_return_line_item:
+      internal_comment: "'redacted'"
+    order_return_line_item_reason_translation:
+      content: "'redacted'"
+    pickware_sales_channel_api_context:
+      payload: "'redacted'"
+      sales_channel_context_token: "'***'"
+    product_review_translation:
+      comment: "'redacted'"
+      content: "'redacted'"
+    quote_employee:
+      first_name: '{{- faker.Person.FirstName() -}}'
+      last_name: '{{- faker.Person.LastName() -}}'
+    quote_line_item:
+      description: "'redacted'"
+      payload: "'redacted'"
+    spatial_scene:
+      description: "'redacted'"
+    subscription_address:
+      additional_address_line1: '{{- faker.Address.StreetAddress() -}}'
+      additional_address_line2: '{{- faker.Address.StreetAddress() -}}'
+      city: '{{- faker.Address.City() -}}'
+      company: '{{- faker.Person.Name() -}}'
+      first_name: '{{- faker.Person.FirstName() -}}'
+      last_name: '{{- faker.Person.LastName() -}}'
+      phone_number: '{{- faker.Phone.Number() -}}'
+      street: '{{- faker.Address.StreetAddress() -}}'
+      zipcode: '{{- faker.Address.PostCode() -}}'
+    subscription_cart:
+      main_token: "'***'"
+      subscription_token: "'***'"
+    subscription_customer:
+      company: '{{- faker.Person.Name() -}}'
+      email: '{{- faker.Internet.Email() -}}'
+      first_name: '{{- faker.Person.FirstName() -}}'
+      last_name: '{{- faker.Person.LastName() -}}'
+      remote_address: '{{- faker.Internet.Ipv4() -}}'
+    subscription_plan_translation:
+      description: "'redacted'"
+    swag_newsletter_recipient_custom:
+      email: '{{- faker.Internet.Email() -}}'
+      first_name: '{{- faker.Person.FirstName() -}}'
+      last_name: '{{- faker.Person.LastName() -}}'
+      phone_number: '{{- faker.Phone.Number() -}}'
+    swag_paypal_pos_sales_channel:
+      api_key: "'***'"
+    swag_paypal_pos_sales_channel_run:
+      message_count: "'redacted'"
+    swag_paypal_pos_sales_channel_run_log:
+      message: "'redacted'"
+    swag_paypal_vault_token:
+      token: "'***'"
+      token_customer: "'***'"
+    warehouse:
+      description: "'redacted'"
+    warehouse_group:
+      description: "'redacted'"
+  nodata:
+    - acris_staging
+    - acris_staging_log
+    - acris_staging_log_translation
+    - dreisc_seo_redirect_import_export_log
+    - moorl_location_cache
+    - swag_newsletter_send_log
+    - swag_paypal_pos_sales_channel_run_log
+    - swag_sequence_webhook_event_log
