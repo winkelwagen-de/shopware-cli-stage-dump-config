@@ -1,0 +1,76 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use ShopwareGdprDump\Validate\DumpConfigValidator;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$projectRoot = dirname(__DIR__);
+$changedOnly = \in_array('--changed-only', $argv, true);
+$skipDistCheck = \in_array('--skip-dist-check', $argv, true);
+
+$files = [];
+if ($changedOnly) {
+    $files = getChangedPluginFiles($projectRoot);
+    if ($files === []) {
+        fwrite(STDOUT, "No plugin config changes to validate.\n");
+        exit(0);
+    }
+}
+
+$validator = new DumpConfigValidator($projectRoot);
+$errors = $validator->validate($files, !$skipDistCheck, $changedOnly);
+
+if ($errors !== []) {
+    fwrite(STDERR, "Validation failed:\n");
+    foreach ($errors as $error) {
+        fwrite(STDERR, " - {$error}\n");
+    }
+    exit(1);
+}
+
+fwrite(STDOUT, "Validation passed.\n");
+
+/**
+ * @return list<string>
+ */
+function getChangedPluginFiles(string $projectRoot): array
+{
+    $gitRoot = trim((string) shell_exec('git rev-parse --show-toplevel 2>/dev/null'));
+    if ($gitRoot === '') {
+        return [];
+    }
+
+    $base = getenv('GITHUB_BASE_REF');
+    $commands = [];
+
+    if (\is_string($base) && $base !== '') {
+        $base = preg_replace('/[^a-zA-Z0-9._\/-]/', '', $base) ?? '';
+        if ($base !== '') {
+            $commands[] = 'git diff --name-only origin/' . $base . '...HEAD';
+        }
+    }
+
+    $commands[] = 'git diff --name-only HEAD';
+    $commands[] = 'git diff --cached --name-only';
+
+    $changed = [];
+    foreach ($commands as $command) {
+        $output = shell_exec($command);
+        if (!\is_string($output)) {
+            continue;
+        }
+        foreach (preg_split('/\R/', trim($output)) ?: [] as $line) {
+            if ($line === '') {
+                continue;
+            }
+            if (str_starts_with($line, 'plugins/') && preg_match('/\.ya?ml$/', $line) === 1) {
+                $changed[$projectRoot . '/' . $line] = true;
+            }
+        }
+    }
+
+    return array_keys($changed);
+}
