@@ -1,0 +1,30 @@
+name: Validate
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/**'
+      - 'config/**'
+      - 'schema/**'
+      - 'bin/**'
+      - 'src/**'
+      - 'composer.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: php-actions/composer@v1
+        with:
+          php_version: '8.2'
+          args: --no-interaction --prefer-dist
+
+      - name: Validate changed plugin configs
+        run: php bin/validate-dump-config --changed-only --skip-dist-check
+
+      - name: Check dist freshness
+        run: php bin/build-dump-config --check

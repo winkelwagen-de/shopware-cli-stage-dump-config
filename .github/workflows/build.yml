@@ -1,0 +1,42 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'plugins/**'
+      - 'config/**'
+      - 'schema/**'
+      - 'bin/**'
+      - 'src/**'
+      - 'composer.json'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: php-actions/composer@v1
+        with:
+          php_version: '8.2'
+          args: --no-interaction --prefer-dist
+
+      - name: Build merged dump config
+        run: php bin/build-dump-config
+
+      - name: Commit updated dist if changed
+        run: |
+          if git diff --quiet dist/shopware-gdpr-dump.yml shopware-gdpr-dump.yml; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/shopware-gdpr-dump.yml shopware-gdpr-dump.yml
+          git commit -m "[ci] rebuild dump config"
+          git push
