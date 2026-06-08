@@ -1,0 +1,147 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use ShopwareGdprDump\Output\PluginConfigDraftWriter;
+use ShopwareGdprDump\Scan\PluginMetadataResolver;
+use ShopwareGdprDump\Scan\PluginMigrationScanner;
+use ShopwareGdprDump\Scan\PluginPathResolver;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$repoRoot = dirname(__DIR__);
+$pluginsOutputDir = $repoRoot . '/plugins';
+
+function printUsage(): void
+{
+    fwrite(STDERR, <<<USAGE
+Usage:
+  bin/scan-plugin-migrations <shopware-path> [--force]
+
+Scans all plugins with migrations in custom/plugins/ and custom/static-plugins/
+and writes draft YAML files into this repository under plugins/{vendor}/{package}.yaml.
+
+Plugins from custom/static-plugins/ are written under plugins/_{vendor}/ to keep
+local plugins out of community commits (see .gitignore).
+
+Options:
+  --force             Overwrite existing plugin YAML files (default: skip)
+
+Workflow:
+  bin/scan-plugin-migrations /path/to/shopware
+  # review drafts in plugins/
+  bin/cleanup-plugin-config plugins/vendor/plugin.yaml
+  bin/build-dump-config && bin/validate-dump-config
+
+USAGE);
+}
+
+$shopwarePath = null;
+$force = false;
+
+foreach (array_slice($argv, 1) as $arg) {
+    if ($arg === '--help' || $arg === '-h') {
+        printUsage();
+        exit(0);
+    }
+
+    if ($arg === '--force') {
+        $force = true;
+        continue;
+    }
+
+    if ($shopwarePath === null) {
+        $shopwarePath = $arg;
+    }
+}
+
+if ($shopwarePath === null) {
+    printUsage();
+    exit(1);
+}
+
+if (!is_dir($shopwarePath)) {
+    fwrite(STDERR, "Shopware path does not exist: {$shopwarePath}\n");
+    exit(1);
+}
+
+$resolver = new PluginPathResolver();
+
+if (!$resolver->isShopwareRoot($shopwarePath)) {
+    fwrite(STDERR, "Expected a Shopware project root (directory containing custom/plugins/).\n");
+    fwrite(STDERR, "Got: {$shopwarePath}\n");
+    exit(1);
+}
+
+$metadata = new PluginMetadataResolver();
+
+try {
+    $pluginEntries = $resolver->resolvePluginEntries($shopwarePath);
+} catch (Throwable $e) {
+    fwrite(STDERR, $e->getMessage() . "\n");
+    exit(1);
+}
+
+if ($pluginEntries === []) {
+    fwrite(STDERR, "No plugins with migrations found under: {$shopwarePath}\n");
+    exit(1);
+}
+
+$scanner = new PluginMigrationScanner();
+$writer = new PluginConfigDraftWriter();
+$failures = [];
+$written = 0;
+$skipped = 0;
+
+foreach ($pluginEntries as $entry) {
+    $pluginPath = $entry['path'];
+    $name = $metadata->resolveComposerName($pluginPath);
+    $label = $metadata->resolveLabel($pluginPath, $name);
+    $target = $resolver->defaultOutputPath($name, $pluginsOutputDir, $entry['source']);
+
+    if (!$force && is_file($target)) {
+        fwrite(STDOUT, "Skipped {$name} (already exists: {$target})\n");
+        ++$skipped;
+        continue;
+    }
+
+    try {
+        $draft = $scanner->scan($pluginPath, $name, $label);
+        $yaml = $writer->write($draft);
+        writeOutputFile($target, $yaml);
+        fwrite(STDOUT, "Wrote draft to {$target}\n");
+        ++$written;
+    } catch (Throwable $e) {
+        $failures[] = sprintf('%s (%s): %s', $pluginPath, $name, $e->getMessage());
+    }
+}
+
+if ($written === 0 && $skipped === 0) {
+    fwrite(STDERR, "No plugin configs generated.\n");
+    foreach ($failures as $failure) {
+        fwrite(STDERR, " - {$failure}\n");
+    }
+    exit(1);
+}
+
+if ($failures !== []) {
+    fwrite(STDERR, "\nSkipped plugins:\n");
+    foreach ($failures as $failure) {
+        fwrite(STDERR, " - {$failure}\n");
+    }
+}
+
+if ($written === 0 && $skipped > 0) {
+    fwrite(STDOUT, "\nAll plugins already have config files. Use --force to regenerate.\n");
+}
+
+function writeOutputFile(string $path, string $contents): void
+{
+    $dir = dirname($path);
+    if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+        throw new RuntimeException("Unable to create output directory: {$dir}");
+    }
+
+    file_put_contents($path, $contents);
+}
