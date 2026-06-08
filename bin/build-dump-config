@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use ShopwareGdprDump\Build\DumpConfigBuilder;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$projectRoot = dirname(__DIR__);
+$checkOnly = \in_array('--check', $argv, true);
+
+try {
+    $builder = new DumpConfigBuilder($projectRoot);
+    $built = $builder->build();
+
+    $distDir = $projectRoot . '/dist';
+    if (!is_dir($distDir) && !mkdir($distDir, 0755, true) && !is_dir($distDir)) {
+        throw new RuntimeException('Unable to create dist/ directory');
+    }
+
+    $distFile = $distDir . '/shopware-gdpr-dump.yml';
+    $packageFile = $projectRoot . '/shopware-gdpr-dump.yml';
+
+    if ($checkOnly) {
+        $current = is_file($distFile) ? (string) file_get_contents($distFile) : '';
+        if ($current !== $built) {
+            fwrite(STDERR, "dist/shopware-gdpr-dump.yml is out of date — run bin/build-dump-config\n");
+            exit(1);
+        }
+        fwrite(STDOUT, "dist/shopware-gdpr-dump.yml is up to date.\n");
+        exit(0);
+    }
+
+    file_put_contents($distFile, $built);
+    file_put_contents($packageFile, $built);
+
+    fwrite(STDOUT, "Wrote dist/shopware-gdpr-dump.yml and shopware-gdpr-dump.yml\n");
+} catch (Throwable $e) {
+    fwrite(STDERR, $e->getMessage() . "\n");
+    exit(1);
+}
