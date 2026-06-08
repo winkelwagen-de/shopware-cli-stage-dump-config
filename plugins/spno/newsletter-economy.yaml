@@ -11,6 +11,3 @@ dump:
       rewrite:
         email: email
         password: "'***'"
-    newsletter_translation:
-      rewrite:
-        short_description: "'redacted'"
