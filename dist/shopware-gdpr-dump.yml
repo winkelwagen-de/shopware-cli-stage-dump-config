@@ -124,6 +124,18 @@ dump:
       personalized_email: '{{- faker.Internet.Email() -}}'
     hochwarth_sold_out_mail:
       email: '{{- faker.Internet.Email() -}}'
+    mollie_subscription_address:
+      additional_address_line1: '{{- faker.Address.StreetAddress() -}}'
+      additional_address_line2: '{{- faker.Address.StreetAddress() -}}'
+      city: '{{- faker.Address.City() -}}'
+      company: "'redacted'"
+      department: "'redacted'"
+      first_name: '{{- faker.Person.FirstName() -}}'
+      last_name: '{{- faker.Person.LastName() -}}'
+      phone_number: '{{- faker.Phone.Number() -}}'
+      street: '{{- faker.Address.StreetAddress() -}}'
+      vat_id: "'redacted'"
+      zipcode: '{{- faker.Address.PostCode() -}}'
     newsletter_sender:
       email: '{{- faker.Internet.Email() -}}'
       password: "'***'"
@@ -136,6 +148,16 @@ dump:
       internal_comment: "'redacted'"
     order_return_line_item_reason_translation:
       content: "'redacted'"
+    periodrequestform:
+      city: '{{- faker.Address.City() -}}'
+      comment: "'redacted'"
+      email: '{{- faker.Internet.Email() -}}'
+      firstname: '{{- faker.Person.FirstName() -}}'
+      freeinput: "'redacted'"
+      lastname: '{{- faker.Person.LastName() -}}'
+      phone: '{{- faker.Phone.Number() -}}'
+      street: '{{- faker.Address.StreetAddress() -}}'
+      zipcode: '{{- faker.Address.PostCode() -}}'
     pickware_sales_channel_api_context:
       payload: "'redacted'"
       sales_channel_context_token: "'***'"
@@ -199,7 +221,19 @@ dump:
     - b2bsellers_employee_invitation
     - b2bsellers_order_approval_activity
     - b2bsellers_passwordless_login
+    - cleverreach_archived_entity
+    - cleverreach_automation_entity
+    - cleverreach_buffer_configuration_entity
+    - cleverreach_config
+    - cleverreach_configs
+    - cleverreach_data_resources_entity
+    - cleverreach_entity
+    - cleverreach_events_buffer_entity
+    - cleverreach_processes
+    - cleverreach_queues
     - dreisc_seo_redirect_import_export_log
+    - frosh_mail_archive
+    - frosh_mail_archive_attachment
     - moorl_location_cache
     - swag_newsletter_send_log
     - swag_paypal_pos_sales_channel_run_log
