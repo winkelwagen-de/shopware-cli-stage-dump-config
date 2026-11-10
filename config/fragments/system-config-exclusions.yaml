@@ -21,6 +21,7 @@ system_config_excluded_keys:
   - Sendinblue.config.userConnectionId
   - SwagPayPal.settings.clientId
   - SwagPayPal.settings.clientSecret
+  - SwagPayPal.settings.merchantPayerId
   - SwagPayPal.settings.webhookExecuteToken
   - SwagPayPal.settings.webhookId
   - SwagPlatformSecurity.config.allowUnencryptedWebhookTraffic
@@ -32,8 +33,16 @@ system_config_excluded_keys:
   - WeedesignPageSpeed.config.email
   - WeedesignPageSpeed.config.htaccess
   - cobby.config.cobbyIntegrationId
+  - core.app.shopId
+  - core.app.shopIdV2
   - core.basicInformation.address
   - core.mailerSettings.disableDelivery
+  - core.mailerSettings.emailAgent
+  - core.mailerSettings.host
+  - core.mailerSettings.password
+  - core.mailerSettings.port
+  - core.mailerSettings.username
+  - core.staging
   - core.webhook.entryLifetimeSeconds
   - trustedShopsApp.config.clientId
   - trustedShopsApp.config.clientSecret
