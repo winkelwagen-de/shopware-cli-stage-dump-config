@@ -116,6 +116,8 @@ dump:
       remote_address: '{{- faker.Internet.Ipv4() -}}'
     coe_reserved_basket:
       cart_token: "'***'"
+    customer:
+      password: "'***'"
     dreisc_seo_redirect_import_export_file:
       access_token: "'***'"
     esmx_ktconnector_blacklist:
@@ -124,6 +126,8 @@ dump:
       personalized_email: '{{- faker.Internet.SafeEmail() -}}'
     hochwarth_sold_out_mail:
       email: '{{- faker.Internet.SafeEmail() -}}'
+    integration:
+      secret_access_key: "'***'"
     mollie_subscription_address:
       additional_address_line1: '{{- faker.Address.StreetAddress() -}}'
       additional_address_line2: '{{- faker.Address.StreetAddress() -}}'
@@ -207,6 +211,8 @@ dump:
     swag_paypal_vault_token:
       token: "'***'"
       token_customer: "'***'"
+    user:
+      password: "'***'"
     warehouse:
       description: "'redacted'"
     warehouse_group:
