@@ -4,6 +4,7 @@
 system_config_excluded_keys:
   - BowPlatformMailchimpMailer.config.mailchimpUser
   - DIScoGA4.config.googleTagId
+  - DooFinder.config.api_key
   - IntediaDoofinderSW6.config.apiKey
   - KlarnaPayment.settings.ApiPassword
   - KlarnaPayment.settings.apiUsername
